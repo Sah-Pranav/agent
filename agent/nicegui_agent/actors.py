@@ -29,10 +29,12 @@ class NiceguiActor(FileOperationsActor):
         files_protected: list[str] | None = None,
         files_allowed: list[str] | None = None,
         event_callback: Callable[[str], Awaitable[None]] | None = None,
+        check_settings: dict[str, bool] | None = None,
     ):
         super().__init__(llm, workspace, beam_width, max_depth)
         self.system_prompt = system_prompt
         self.event_callback = event_callback
+        self.check_settings = check_settings or {}
         self.files_protected = files_protected or [
             "pyproject.toml",
             "main.py",
@@ -248,6 +250,23 @@ class NiceguiActor(FileOperationsActor):
             tg.start_soon(run_and_store, "type_check", self.run_type_checks(node))
             tg.start_soon(run_and_store, "tests", self.run_tests(node))
             tg.start_soon(run_and_store, "sqlmodel", self.run_sqlmodel_checks(node))
+
+        # Filter results based on check_settings
+        if self.check_settings.get("skip_lint"):
+            results.pop("lint", None)
+            logger.info("Skipping lint checks based on settings")
+        
+        if self.check_settings.get("skip_type_check"):
+            results.pop("type_check", None)
+            logger.info("Skipping type checks based on settings")
+
+        if self.check_settings.get("skip_tests"):
+            results.pop("tests", None)
+            logger.info("Skipping tests based on settings")
+
+        if self.check_settings.get("skip_sqlmodel"):
+            results.pop("sqlmodel", None)
+            logger.info("Skipping SQLModel checks based on settings")
 
         if lint_result := results.get("lint"):
             logger.info(f"Lint checks failed: {lint_result}")

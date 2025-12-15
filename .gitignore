@@ -172,3 +172,7 @@ agent/app_dumps.zip
 agent/FSMAppRecovery.ipynb
 agent/app_dumps/*.*
 agent/bin/*.*
+
+# Experiment outputs
+generated_apps/
+logs_summary/

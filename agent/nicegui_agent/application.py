@@ -118,7 +118,7 @@ class FSMApplication:
 
     @classmethod
     def template_path(cls) -> str:
-        return "./nicegui_agent/template"
+        return "agent/nicegui_agent/template"
 
     @classmethod
     async def start_fsm(
@@ -208,7 +208,7 @@ class FSMApplication:
         workspace = await Workspace.create(
             client=client,
             base_image="alpine:3.21.3",
-            context=client.host().directory("./nicegui_agent/template"),
+            context=client.host().directory("agent/nicegui_agent/template"),
             setup_cmd=[
                 [
                     "apk",
@@ -230,6 +230,7 @@ class FSMApplication:
 
         # Extract event_callback from settings if provided
         event_callback = settings.pop("event_callback", None) if settings else None
+        check_settings = settings.pop("check_settings", None) if settings else None
 
         data_actor = NiceguiActor(
             llm=llm,
@@ -239,6 +240,7 @@ class FSMApplication:
             system_prompt=playbooks.DATA_MODEL_SYSTEM_PROMPT,
             files_allowed=["app/models.py"],
             event_callback=event_callback,
+            check_settings=check_settings,
         )
         # ToDo: propagate crucial template files to DATA_MODEL_SYSTEM_PROMPT so they're cached
         app_actor = NiceguiActor(
@@ -248,6 +250,7 @@ class FSMApplication:
             max_depth=100,  # can be larger given every file change is a separate tool call,
             system_prompt=playbooks.APPLICATION_SYSTEM_PROMPT,
             event_callback=event_callback,
+            check_settings=check_settings,
         )
 
         # Define state machine states
@@ -467,7 +470,7 @@ class FSMApplication:
             )
 
         # Add template files (they will appear in diff if not in snapshot)
-        template_dir = self.client.host().directory("./nicegui_agent/template")
+        template_dir = self.client.host().directory("agent/nicegui_agent/template")
         start = start.with_directory(".", template_dir)
         logger.info("SERVER get_diff_with: Added template directory to workspace")
 

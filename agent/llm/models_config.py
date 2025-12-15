@@ -80,25 +80,31 @@ ANTHROPIC_MODELS = {
 
 GEMINI_MODELS = {
     "gemini-pro": {
-        "gemini": "gemini-2.5-pro-preview-05-06",
+        "gemini": "gemini-2.5-pro",
     },
     "gemini-flash": {
-        "gemini": "gemini-2.5-flash-preview-05-20",
+        "gemini": "gemini-2.5-flash",
     },
     "gemini-flash-lite": {
-        "gemini": "gemini-2.5-flash-lite-preview-06-17",
+        "gemini": "gemini-2.5-flash-lite",
+    },
+    "gemini-2.0-flash-exp": {
+        "gemini": "gemini-2.0-flash-exp",
     },
 }
 
 OLLAMA_MODELS = {
     # Meta LLaMA
     "llama3.3": {"ollama": "llama3.3"},           # Latest LLaMA, best for general coding
+    "llama3.1": {"ollama": "llama3.1"},           # LLaMA 3.1
     "llama3.2-vision": {"ollama": "llama3.2-vision"},  # Latest vision capabilities
     "gemma3": {"ollama": "gemma3:27b"},  # Latest vision capabilities
     "codellama": {"ollama": "codellama:13b"},     # Specialized for code
+    "mistral": {"ollama": "mistral"},             # Mistral 7B
     
     # Qwen3
     "qwen3": {"ollama": "qwen3:30b"},             # Latest Qwen with thinking mode
+    "qwen2.5-coder-3b": {"ollama": "qwen2.5-coder:3b"}, # Fast, good quality for size
     "qwen3-coder": {"ollama": "qwen3-coder:7b"}, # Specialized for coding
     
     # Mistral
@@ -107,6 +113,7 @@ OLLAMA_MODELS = {
     
     # Microsoft Phi
     "phi4": {"ollama": "phi4:14b"},               # Latest Phi model
+    "phi3": {"ollama": "phi3:latest"},            # Small, fast model
     
     # Specialized models
     "deepseek-coder": {"ollama": "deepseek-coder:33b"}, # Best for coding
@@ -142,7 +149,7 @@ def get_model_for_category(category: str) -> str:
         return explicit_model
     
     # If PREFER_OLLAMA is set, use Ollama models as default
-    if os.getenv("PREFER_OLLAMA"):
+    if os.getenv("PREFER_OLLAMA", "").lower() == "true":
         return OLLAMA_DEFAULT_MODELS.get(category, "gemma3")
     
     # Otherwise use regular defaults
