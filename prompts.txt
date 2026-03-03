@@ -1,1 +1,5 @@
-Create a web app for managing a book library where users can add, view, update, and remove books, each with details like title, author, genre, and reading status. Include user-friendly forms, list views, and the ability to search or filter books.
+Create a web app for managing a personal book library where users can add, view, edit, and delete books. Each book should include: title, author, genre, and reading status.
+Make a Roommate Chore Wheel that randomly assigns chores each week and tracks completion.
+Users input hours of sleep, stress levels, caffeine/alcohol intake—then get a daily "wellness score" with historical trends.
+Create a simple web app called Plant Care Tracker that lets users track the condition of their plants using fun plant moods based on custom rule-based logic. Avoid using AI, ML, or external APIs.
+Build an app where users can add and track pantry items, get expiry notifications, and, if possible, generate recipe suggestions using AI based on available ingredients.

@@ -6,7 +6,7 @@ except ImportError:
         "ollama package is required for OllamaLLM. "
         "Install it with: uv sync --group ollama"
     )
-from llm import common
+from . import common
 from log import get_logger
 import logging
 from tenacity import retry, stop_after_attempt, wait_exponential_jitter, before_sleep_log

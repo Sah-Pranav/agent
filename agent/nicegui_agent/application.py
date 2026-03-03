@@ -246,7 +246,7 @@ class FSMApplication:
         app_actor = NiceguiActor(
             llm=llm,
             workspace=workspace.clone(),
-            beam_width=3,
+            beam_width=1,
             max_depth=100,  # can be larger given every file change is a separate tool call,
             system_prompt=playbooks.APPLICATION_SYSTEM_PROMPT,
             event_callback=event_callback,

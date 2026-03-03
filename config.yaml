@@ -1,10 +1,14 @@
+# Target number of prompts to generate automatically if fewer exist
+target_prompt_count: 1
+
 configs:
+
   # - name: all_checks_on
   #   settings: {}
-  # - name: type_check_off
-  #   settings:
-  #     check_settings:
-  #       skip_type_check: true
+  - name: type_check_off
+    settings:
+      check_settings:
+        skip_type_check: true
   # - name: lint_off
   #   settings:
   #     check_settings:
@@ -17,8 +21,8 @@ configs:
   #   settings:
   #     check_settings:
   #       skip_sqlmodel: true
-  - name: lint_and_type_check_off
-    settings:
-      check_settings:
-        skip_lint: true
-        skip_type_check: true
+  # - name: lint_and_type_check_off
+  #   settings:
+  #     check_settings:
+  #       skip_lint: true
+  #       skip_type_check: true

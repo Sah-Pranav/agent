@@ -12,8 +12,8 @@ from anthropic.types import (
     ToolResultBlockParam,
     ToolChoiceParam,
 )
-from llm import common
-from llm.telemetry import LLMTelemetry
+from . import common
+from .telemetry import LLMTelemetry
 from log import get_logger
 import logging
 from tenacity import retry, stop_after_attempt, wait_exponential_jitter, before_sleep_log
@@ -30,7 +30,7 @@ def is_rate_limit_error(exception):
 
 retry_rate_limits = retry(
     stop=stop_after_attempt(10),
-    wait=wait_exponential_jitter(initial=2, max=60),
+    wait=wait_exponential_jitter(initial=30, max=90), # Aggressive wait for 1-minute rate limits
     retry=is_rate_limit_error,
     before_sleep=before_sleep_log(logger, logging.WARNING),
     retry_error_callback=lambda retry_state: logger.warning(f"Retry failed: {retry_state.outcome.exception()}")

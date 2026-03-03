@@ -173,6 +173,10 @@ agent/FSMAppRecovery.ipynb
 agent/app_dumps/*.*
 agent/bin/*.*
 
-# Experiment outputs
+# Experiment outputs (auto-generated, not part of the thesis artifact)
 generated_apps/
 logs_summary/
+experiment_runner.log
+
+# NOTE: prompts.txt and metrics_summary.csv are INTENTIONALLY tracked.
+# They are core research artifacts (reproducible input dataset + results).

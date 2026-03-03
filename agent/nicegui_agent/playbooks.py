@@ -262,20 +262,23 @@ app/word_counter.py
 ```
 from nicegui import ui
 
+@ui.page('/repeat/{{word}}/{{count}}')
+def page(word: str, count: int):
+    ui.label(word * count)
+
 def create():
-    @ui.page('/repeat/{{word}}/{{count}}')
-    def page(word: str, count: int):
-        ui.label(word * count)
+    "Initialize the word_counter module"
+    pass
 ```
 
 app/startup.py
 ```
-from nicegui import ui
-import word_counter
+from app.database import create_tables
+import app.word_counter
 
 def startup() -> None:
     create_tables()
-    word_counter.create()
+    app.word_counter.create()
 ```
 
 
@@ -306,12 +309,15 @@ app/tab_storage_example.py
 ```
 from nicegui import app, ui
 
+@ui.page('/num_tab_reloads')
+async def page():
+    await ui.context.client.connected()  # Wait for connection before accessing tab storage
+    app.storage.tab['count'] = app.storage.tab.get('count', 0) + 1
+    ui.label(f'Tab reloaded {{app.storage.tab["count"]}} times')
+
 def create():
-    @ui.page('/num_tab_reloads')
-    async def page():
-        await ui.context.client.connected()  # Wait for connection before accessing tab storage
-        app.storage.tab['count'] = app.storage.tab.get('count', 0) + 1
-        ui.label(f'Tab reloaded {{app.storage.tab["count"]}} times')
+    "Initialize tab_storage_example module"
+    pass
 ```
 
 app.storage.client: Stored server-side in memory, unique to each client connection. Data is discarded when page is reloaded or user navigates away. Useful for caching temporary data (e.g., form state, UI preferences) during a single page session.
@@ -375,13 +381,16 @@ app/checkbox_widget.py
 ```
 from nicegui import ui, app
 
+@ui.page('/checkbox')
+def page():
+    v = ui.checkbox('visible', value=True)
+    with ui.column().bind_visibility_from(v, 'value'):
+        # values can be bound to storage
+        ui.textarea('This note is kept between visits').bind_value(app.storage.user, 'note')
+
 def create():
-    @ui.page('/checkbox')
-    def page():
-        v = ui.checkbox('visible', value=True)
-        with ui.column().bind_visibility_from(v, 'value'):
-            # values can be bound to storage
-            ui.textarea('This note is kept between visits').bind_value(app.storage.user, 'note')
+    "Initialize checkbox_widget module"
+    pass
 ```
 
 # Error handling and notifications
@@ -392,17 +401,20 @@ app/file_processor.py
 ```
 from nicegui import ui
 
-def create():
-    @ui.page('/process')
-    def page():
-        def process_file():
-            try:
-                # Processing logic here
-                ui.notify('File processed successfully!', type='positive')
-            except Exception as e:
-                ui.notify(f'Error: {{str(e)}}', type='negative')
+@ui.page('/process')
+def page():
+    def process_file():
+        try:
+            # Processing logic here
+            ui.notify('File processed successfully!', type='positive')
+        except Exception as e:
+            ui.notify(f'Error: {{str(e)}}', type='negative')
 
-        ui.button('Process', on_click=process_file)
+    ui.button('Process', on_click=process_file)
+
+def create():
+    "Initialize file_processor module"
+    pass
 ```
 
 # Timers and periodic updates
@@ -414,16 +426,19 @@ app/dashboard.py
 from nicegui import ui
 from datetime import datetime
 
+@ui.page('/dashboard')
+def page():
+    time_label = ui.label()
+
+    def update_time():
+        time_label.set_text(f'Current time: {{datetime.now().strftime("%H:%M:%S")}}')
+
+    update_time()  # Initial update
+    ui.timer(1.0, update_time)  # Update every second
+
 def create():
-    @ui.page('/dashboard')
-    def page():
-        time_label = ui.label()
-
-        def update_time():
-            time_label.set_text(f'Current time: {{datetime.now().strftime("%H:%M:%S")}}')
-
-        update_time()  # Initial update
-        ui.timer(1.0, update_time)  # Update every second
+    "Initialize dashboard module"
+    pass
 ```
 
 # Navigation and routing
@@ -434,11 +449,14 @@ app/navigation.py
 ```
 from nicegui import ui
 
+@ui.page('/')
+def index():
+    ui.link('Go to Dashboard', '/dashboard')
+    ui.button('Navigate programmatically', on_click=lambda: ui.navigate.to('/settings'))
+
 def create():
-    @ui.page('/')
-    def index():
-        ui.link('Go to Dashboard', '/dashboard')
-        ui.button('Navigate programmatically', on_click=lambda: ui.navigate.to('/settings'))
+    "Initialize navigation module"
+    pass
 ```
 
 # Dialogs and user interactions

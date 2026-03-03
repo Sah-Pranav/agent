@@ -2,7 +2,7 @@ from typing import List
 
 from google import genai
 from google.genai import types as genai_types
-from google.genai.errors import ServerError
+from google.genai.errors import ServerError, ClientError
 import os
 from llm import common
 from llm.telemetry import LLMTelemetry
@@ -197,15 +197,18 @@ class GeminiLLM(common.AsyncLLM):
         for message in messages:
             theirs_parts: List[genai_types.Part] = []
             for block in message.content:
-                match block:
-                    case common.TextRaw(text=text):
-                        theirs_parts.append(genai_types.Part.from_text(text=text))
-                    case common.ToolUse(name, input):
-                        theirs_parts.append(genai_types.Part.from_function_call(name=name, args=input)) # pyright: ignore
-                    case common.ToolUseResult(tool_use, tool_result):
-                        theirs_parts.append(genai_types.Part.from_function_response(name=tool_use.name, response={"result": tool_result.content}))
-                    case _:
-                        raise ValueError(f"Unknown block type {type(block)} for {block}")
+                # Use isinstance/class name to be robust against import mismatch
+                if isinstance(block, common.TextRaw) or type(block).__name__ == "TextRaw":
+                     theirs_parts.append(genai_types.Part.from_text(text=block.text))
+                elif isinstance(block, common.ToolUse) or type(block).__name__ == "ToolUse":
+                     theirs_parts.append(genai_types.Part.from_function_call(name=block.name, args=block.input)) # pyright: ignore
+                elif isinstance(block, common.ToolUseResult) or type(block).__name__ == "ToolUseResult":
+                     # Handle ToolUseResult
+                     tool_use = block.tool_use
+                     tool_result = block.tool_result
+                     theirs_parts.append(genai_types.Part.from_function_response(name=tool_use.name, response={"result": tool_result.content}))
+                else:
+                     raise ValueError(f"Unknown block type {type(block)} for {block}")
             theirs_messages.append(genai_types.Content(
                 parts=theirs_parts,
                 role=message.role if message.role == "user" else "model"
