@@ -1,13 +1,8 @@
-<div align="center">
-  <img src="logo.png" alt="app.build logo" width="150">
-</div>
-
-# app.build — Research Fork
-## Evaluation for the Agentic Full-Stack Generative AI Frameworks in Preproduction Testing
+# Evaluation for the Agentic Full-Stack Generative AI Frameworks in Preproduction Testing
 
 > **Author**: Pranav Kumar Sah | Master's Thesis, 2025–2026  
 > **University**: Technical University of Applied Sciences Würzburg-Schweinfurt (THWS)  
-> **Research Collaboration**: [Databricks](https://www.databricks.com/research?search=framework#publications)  
+> **Research Collaboration**: [Databricks app.build team](https://www.databricks.com/research?search=framework#publications)  
 > **Published Paper**: [arXiv:2509.03310](https://arxiv.org/abs/2509.03310)
 
 ---
@@ -16,7 +11,7 @@
 
 This is a **research fork** of [appdotbuild/agent](https://www.app.build) — an open-source agentic framework that generates production-ready full-stack web applications from a single natural language prompt.
 
-This fork was created as part of a Master's thesis — conducted in collaboration with **Databricks app.build team** — researching the **evaluation of agentic full-stack Generative AI frameworks in preproduction testing**. The core contribution is a fully automated ablation study pipeline that measures the impact of different validation layers on agent reliability and computational cost.
+This fork was created as part of a Master's thesis — conducted in collaboration with the **Databricks app.build team** — researching the **evaluation of agentic full-stack Generative AI frameworks in preproduction testing**. The core contribution is a fully automated ablation study pipeline that measures the impact of different validation layers on agent reliability and computational cost.
 
 **Research Question:**
 > *How do individual preproduction validation checks (Linting, Type-Checking, Unit Testing, SQLModel) affect the reliability and efficiency of an agentic full-stack code generation system?*
